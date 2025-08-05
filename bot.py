@@ -9,7 +9,7 @@ TELEGRAM_TOKEN = "8213396742:AAE_to8kw0xyMXulWquPRtSLEiepC9lyBq0"
 CHAT_ID = "7620145809"  # твой chat_id
 
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("kartochka-moyo-fbc6526a695a.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
 client = gspread.authorize(creds)
 
 SPREADSHEET_NAME = "MOYO ONLINE VIP CARDS 2"
@@ -41,3 +41,4 @@ scheduler = BlockingScheduler()
 scheduler.add_job(send_hourly_report, 'cron', minute=0)
 
 scheduler.start()
+
