@@ -17,12 +17,8 @@ client = gspread.authorize(creds)
 SPREADSHEET_ID = "1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA"
 WORKSHEET_NAME = "Reports"
 
-spreadsheet = client.open_by_key(SPREADSHEET_ID)
-print("Файл, который открыл бот:", spreadsheet.title)
-print("Листы в файле:", [ws.title for ws in spreadsheet.worksheets()])
 
-sheet = spreadsheet.worksheet(WORKSHEET_NAME)
-
+sheet = client.open_by_key(SPREADSHEET_ID).worksheet(WORKSHEET_NAME)
 bot = Bot(token=TELEGRAM_TOKEN)
 
 # Список задач: время -> диапазон ячеек
@@ -66,6 +62,7 @@ for task in tasks:
 
 print("Бот запущен...")
 scheduler.start()
+
 
 
 
