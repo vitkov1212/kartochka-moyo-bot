@@ -14,7 +14,7 @@ scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 creds = ServiceAccountCredentials.from_json_keyfile_name("/etc/secrets/service_account.json", scope)
 client = gspread.authorize(creds)
 
-SPREADSHEET_NAME = "MOYO ONLINE VIP CARDS 2"
+SPREADSHEET_ID = "1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA"
 WORKSHEET_NAME = "Reports"
 
 sheet = client.open(SPREADSHEET_NAME).worksheet(WORKSHEET_NAME)
@@ -61,4 +61,5 @@ for task in tasks:
 
 print("Бот запущен...")
 scheduler.start()
+
 
