@@ -35,7 +35,7 @@ async def send_report_async(cell_range):
 
 # Обёртка для планировщика
 def send_report(cell_range):
-print(f"📤 Отправка отчёта запущена в {datetime.now()}")
+    print(f"📤 Отправка отчёта запущена в {datetime.now()}")
     print(f"⏰ Время задачи! Отправка диапазона: {cell_range}")
     asyncio.run_coroutine_threadsafe(send_report_async(cell_range), loop)
 
@@ -97,6 +97,7 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
 
 
