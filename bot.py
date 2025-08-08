@@ -39,28 +39,27 @@ def send_report(cell_range):
 
 # Задачи
 tasks = [
-    {"time": "17:00", "range": "B3:D7"},
-    {"time": "18:00", "range": "F3:H7"},
-    {"time": "19:00", "range": "K3:M7"},
-    {"time": "20:00", "range": "O3:Q7"},
-    {"time": "21:00", "range": "B10:D14"},
-    {"time": "22:00", "range": "F10:H14"},
-    {"time": "23:00", "range": "K10:M14"},
-    {"time": "00:00", "range": "O10:Q14"},
-    {"time": "01:00", "range": "B17:D21"},
-    {"time": "02:00", "range": "F17:H21"},
-    {"time": "03:00", "range": "K17:M21"},
-    {"time": "04:00", "range": "O17:Q21"},
-    {"time": "05:00", "range": "B24:D28"},
-    {"time": "06:00", "range": "F24:H28"},
-    {"time": "07:00", "range": "K24:M28"},
-    {"time": "10:00", "range": "B38:D42"},
-    {"time": "11:00", "range": "F38:H42"},
-    {"time": "12:00", "range": "K38:M42"},
-    {"time": "13:00", "range": "B46:D50"},
-    {"time": "14:00", "range": "F46:H50"},
-    {"time": "15:00", "range": "K46:M50"},
-    {"time": "16:00", "range": "O46:Q50"},
+    {"time": "17:00", "range": "С5:D9"},
+    {"time": "18:00", "range": "F5:H9"},
+    {"time": "19:00", "range": "K5:L9"},
+    {"time": "20:00", "range": "O5:P9"},
+    {"time": "21:00", "range": "C11:D15"},
+    {"time": "22:00", "range": "G11:H15"},
+    {"time": "23:00", "range": "K11:L15"},
+    {"time": "00:00", "range": "O11:P15"},
+    {"time": "01:00", "range": "C17:D21"},
+    {"time": "02:00", "range": "G17:H21"},
+    {"time": "03:00", "range": "K17:L21"},
+    {"time": "04:00", "range": "O17:P21"},
+    {"time": "05:00", "range": "B23:D27"},
+    {"time": "06:00", "range": "G23:H27"},
+    {"time": "07:00", "range": "K23:L27"},
+    {"time": "11:00", "range": "B39:D43"},
+    {"time": "12:00", "range": "G39:H43"},
+    {"time": "13:00", "range": "K39:L43"},
+    {"time": "14:00", "range": "C47:D51"},
+    {"time": "15:00", "range": "G47:H51"},
+    {"time": "16:00", "range": "K47:L51"},
 ]
 
 # Flask сервер (для Render)
@@ -92,3 +91,4 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
