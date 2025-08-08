@@ -6,21 +6,23 @@ from oauth2client.service_account import ServiceAccountCredentials
 from telegram import Bot
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+# Flask для открытия порта
+from flask import Flask
+from threading import Thread
+
+# Telegram
 TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = "7620145899"
+bot = Bot(token=TELEGRAM_TOKEN)
 
-# Google Sheets credentials
+# Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
+sheet = client.open_by_key("1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA").worksheet("Reports")
 
-SPREADSHEET_ID = "1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA"
-WORKSHEET_NAME = "Reports"
-
-sheet = client.open_by_key(SPREADSHEET_ID).worksheet(WORKSHEET_NAME)
-bot = Bot(token=TELEGRAM_TOKEN)
-
+# Задачи
 tasks = [
     {"time": "17:00", "range": "B3:D7"},
     {"time": "18:00", "range": "F3:H7"},
@@ -52,7 +54,7 @@ async def send_report_async(cell_range):
     report = "\n".join(["\t".join(row) for row in data])
     await bot.send_message(chat_id=CHAT_ID, text=f"Отчёт {cell_range}:\n{report}")
 
-# Обертка для планировщика
+# Обёртка для APScheduler
 def send_report(cell_range):
     asyncio.run(send_report_async(cell_range))
 
@@ -62,5 +64,17 @@ for task in tasks:
     hour, minute = map(int, task["time"].split(":"))
     scheduler.add_job(send_report, "cron", hour=hour, minute=minute, args=[task["range"]])
 
-print("Бот запущен...")
-scheduler.start()
+# Flask-сервер (для Render Free)
+app = Flask(__name__)
+@app.route('/')
+def home():
+    return "Bot is running."
+
+def run_flask():
+    app.run(host="0.0.0.0", port=10000)
+
+# Запуск
+if __name__ == "__main__":
+    Thread(target=run_flask).start()
+    print("Бот запущен...")
+    scheduler.start()
