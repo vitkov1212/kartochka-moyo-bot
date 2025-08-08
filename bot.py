@@ -5,8 +5,6 @@ import asyncio
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram import Bot
 from apscheduler.schedulers.blocking import BlockingScheduler
-
-# Flask для открытия порта
 from flask import Flask
 from threading import Thread
 
