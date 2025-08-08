@@ -62,7 +62,8 @@ tasks = [
     {"time": "09:00", "range": "K39:L43"},
     {"time": "10:00", "range": "C47:D51"},
     {"time": "11:00", "range": "G47:H51"},
-    {"time": "12:00", "range": "K47:L51"}
+    {"time": "12:00", "range": "K47:L51"},
+    {"time": "13:05", "range": "K47:L51"}
 ]
 
 # Flask сервер (для Render)
@@ -96,6 +97,7 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
 
 
