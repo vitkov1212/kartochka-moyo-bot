@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 # Telegram
 TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = "-1002542698276"
+CHAT_ID = "-1002852666984"
 bot = Bot(token=TELEGRAM_TOKEN)
 
 # Google Sheets
@@ -63,7 +63,7 @@ tasks = [
     {"time": "10:00", "range": "C47:D51"},
     {"time": "11:00", "range": "G47:H51"},
     {"time": "12:00", "range": "K47:L51"},
-    {"time": "13:05", "range": "K47:L51"}
+    {"time": "13:22", "range": "K47:L51"}
 ]
 
 # Flask сервер (для Render)
@@ -97,6 +97,7 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
 
 
