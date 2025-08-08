@@ -75,6 +75,10 @@ def run_flask():
 
 # Запуск
 if __name__ == "__main__":
+    # Вывод серверного времени
+    import datetime
+    logging.info(f"🕒 Серверное время при запуске: {datetime.datetime.now()}")
+
     # Запуск Flask
     Thread(target=run_flask).start()
 
@@ -91,4 +95,5 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
