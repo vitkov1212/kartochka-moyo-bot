@@ -3,12 +3,13 @@ import json
 import gspread
 import asyncio
 import logging
+import requests  # ← обязательно!
 from flask import Flask
 from threading import Thread
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram import Bot
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime  # ← вот нужный импорт
+from datetime import datetime
 
 # Логирование
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +35,6 @@ async def send_report_async(cell_range):
     except Exception as e:
         logging.error(f"Ошибка при отправке отчета {cell_range}: {e}")
 
-# Обёртка для планировщика
 def send_report(cell_range):
     print(f"📤 Отправка отчёта запущена в {datetime.now()}")
     print(f"⏰ Время задачи! Отправка диапазона: {cell_range}")
@@ -65,13 +65,12 @@ tasks = [
     {"time": "12:00", "range": "K47:L51"}   
 ]
 
-# Flask сервер (для Render)
+# Flask
 app = Flask(__name__)
 @app.route('/')
 def home():
     return "🤖 Бот работает."
 
-# Фоновый запуск Flask
 def run_flask():
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
@@ -79,16 +78,27 @@ def run_flask():
 # Запуск
 if __name__ == "__main__":
     logging.info(f"🕒 Серверное время при запуске: {datetime.now()}")
-
-    # Запуск Flask
     Thread(target=run_flask).start()
 
-    # Асинхронный event loop
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    # Планировщик
     scheduler = BackgroundScheduler()
+
+    # ✅ Self-ping каждые 5 минут
+    def ping_self():
+        try:
+            url = os.getenv("RENDER_EXTERNAL_URL")
+            if url:
+                requests.get(url)
+                logging.info("🔁 Self-ping успешно отправлен.")
+            else:
+                logging.warning("⚠️ Self-ping пропущен: переменная RENDER_EXTERNAL_URL не установлена.")
+        except Exception as e:
+            logging.error(f"Ошибка при self-ping: {e}")
+
+    scheduler.add_job(ping_self, "interval", minutes=5)
+
     for task in tasks:
         hour, minute = map(int, task["time"].split(":"))
         scheduler.add_job(send_report, "cron", hour=hour, minute=minute, args=[task["range"]])
@@ -96,13 +106,3 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
-
-
-
-
-
-
-
-
-
-
