@@ -10,10 +10,9 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")  # токен из переменных окружения
 CHAT_ID = "7620145899"  # твой chat_id
 
-# Google Sheets доступ через JSON из переменной окружения
+# Google Sheets доступ через JSON-файл из секрета
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("/etc/secrets/service_account_json", scope)
 client = gspread.authorize(creds)
 
 SPREADSHEET_ID = "1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA"
