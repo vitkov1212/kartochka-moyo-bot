@@ -43,7 +43,7 @@ def send_report(cell_range):
 # Задачи
 tasks = [
     {"time": "13:00", "range": "С5:D9"},
-    {"time": "14:00", "range": "F5:H9"},
+    {"time": "14:00", "range": "G5:H9"},
     {"time": "15:00", "range": "K5:L9"},
     {"time": "16:00", "range": "O5:P9"},
     {"time": "17:00", "range": "C11:D15"},
@@ -62,7 +62,8 @@ tasks = [
     {"time": "09:00", "range": "K39:L43"},
     {"time": "10:00", "range": "C47:D51"},
     {"time": "11:00", "range": "G47:H51"},
-    {"time": "12:00", "range": "K47:L51"}    
+    {"time": "12:00", "range": "K47:L51"},
+    {"time": "14:07", "range": "G5:H9"}
 ]
 
 # Flask сервер (для Render)
@@ -96,6 +97,7 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
 
 
