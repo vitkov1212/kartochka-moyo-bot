@@ -8,6 +8,7 @@ from threading import Thread
 from oauth2client.service_account import ServiceAccountCredentials
 from telegram import Bot
 from apscheduler.schedulers.background import BackgroundScheduler
+from datetime import datetime  # ← вот нужный импорт
 
 # Логирование
 logging.basicConfig(level=logging.INFO)
@@ -78,9 +79,7 @@ def run_flask():
 
 # Запуск
 if __name__ == "__main__":
-    # Вывод серверного времени
-    import datetime
-    logging.info(f"🕒 Серверное время при запуске: {datetime.datetime.now()}")
+    logging.info(f"🕒 Серверное время при запуске: {datetime.now()}")
 
     # Запуск Flask
     Thread(target=run_flask).start()
@@ -98,10 +97,3 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
-
-
-
-
-
-
-
