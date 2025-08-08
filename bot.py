@@ -30,7 +30,7 @@ async def send_report_async(cell_range):
     try:
         data = sheet.get(cell_range)
         report = "\n".join(["\t".join(row) for row in data])
-        await bot.send_message(chat_id=CHAT_ID, text=f"📝 Отчёт {cell_range}:\n{report}")
+        await bot.send_message(chat_id=CHAT_ID, text=f"📝 Отчёт :\n{report}")
     except Exception as e:
         logging.error(f"Ошибка при отправке отчета {cell_range}: {e}")
 
@@ -62,8 +62,7 @@ tasks = [
     {"time": "09:00", "range": "K39:L43"},
     {"time": "10:00", "range": "C47:D51"},
     {"time": "11:00", "range": "G47:H51"},
-    {"time": "12:00", "range": "K47:L51"},
-    {"time": "12:55", "range": "K47:L51"}
+    {"time": "12:00", "range": "K47:L51"}
 ]
 
 # Flask сервер (для Render)
@@ -97,6 +96,7 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
 
 
 
