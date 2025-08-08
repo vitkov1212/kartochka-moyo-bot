@@ -2,11 +2,15 @@ import os
 import json
 import gspread
 import asyncio
-from oauth2client.service_account import ServiceAccountCredentials
-from telegram import Bot
-from apscheduler.schedulers.blocking import BlockingScheduler
+import logging
 from flask import Flask
 from threading import Thread
+from oauth2client.service_account import ServiceAccountCredentials
+from telegram import Bot
+from apscheduler.schedulers.background import BackgroundScheduler
+
+# Логирование
+logging.basicConfig(level=logging.INFO)
 
 # Telegram
 TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
@@ -19,6 +23,19 @@ creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 sheet = client.open_by_key("1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA").worksheet("Reports")
+
+# Асинхронная отправка
+async def send_report_async(cell_range):
+    try:
+        data = sheet.get(cell_range)
+        report = "\n".join(["\t".join(row) for row in data])
+        await bot.send_message(chat_id=CHAT_ID, text=f"📝 Отчёт {cell_range}:\n{report}")
+    except Exception as e:
+        logging.error(f"Ошибка при отправке отчета {cell_range}: {e}")
+
+# Обёртка для планировщика
+def send_report(cell_range):
+    asyncio.run_coroutine_threadsafe(send_report_async(cell_range), loop)
 
 # Задачи
 tasks = [
@@ -46,33 +63,32 @@ tasks = [
     {"time": "16:00", "range": "O46:Q50"},
 ]
 
-# Асинхронная отправка
-async def send_report_async(cell_range):
-    data = sheet.get(cell_range)
-    report = "\n".join(["\t".join(row) for row in data])
-    await bot.send_message(chat_id=CHAT_ID, text=f"Отчёт {cell_range}:\n{report}")
-
-# Обёртка для APScheduler
-def send_report(cell_range):
-    asyncio.run(send_report_async(cell_range))
-
-# Планировщик
-scheduler = BlockingScheduler()
-for task in tasks:
-    hour, minute = map(int, task["time"].split(":"))
-    scheduler.add_job(send_report, "cron", hour=hour, minute=minute, args=[task["range"]])
-
-# Flask-сервер (для Render Free)
+# Flask сервер (для Render)
 app = Flask(__name__)
 @app.route('/')
 def home():
-    return "Bot is running."
+    return "🤖 Бот работает."
 
+# Фоновый запуск Flask
 def run_flask():
-    app.run(host="0.0.0.0", port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
 
 # Запуск
 if __name__ == "__main__":
+    # Запуск Flask
     Thread(target=run_flask).start()
-    print("Бот запущен...")
+
+    # Асинхронный event loop
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    # Планировщик
+    scheduler = BackgroundScheduler()
+    for task in tasks:
+        hour, minute = map(int, task["time"].split(":"))
+        scheduler.add_job(send_report, "cron", hour=hour, minute=minute, args=[task["range"]])
     scheduler.start()
+
+    logging.info("✅ Бот запущен.")
+    loop.run_forever()
