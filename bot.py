@@ -1,4 +1,5 @@
 import os
+import json
 import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -6,45 +7,45 @@ from telegram import Bot
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 # Настройки
-TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")  # токен берем из переменных окружения
+TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")  # токен из переменных окружения
 CHAT_ID = "7620145899"  # твой chat_id
 
-# Google Sheets доступ
+# Google Sheets доступ через JSON из переменной окружения
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("/etc/secrets/service_account.json", scope)
+creds_dict = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 SPREADSHEET_ID = "1PCyseZFzE_FO51DMcp5hqOlJkqCfW7aNirWc8wuTftA"
 WORKSHEET_NAME = "Reports"
-
 
 sheet = client.open_by_key(SPREADSHEET_ID).worksheet(WORKSHEET_NAME)
 bot = Bot(token=TELEGRAM_TOKEN)
 
 # Список задач: время -> диапазон ячеек
 tasks = [
-    {"time": "17:00", "range": "B3:D7"},   # 16:00–17:00
-    {"time": "18:00", "range": "F3:H7"},   # 17:00–18:00
-    {"time": "19:00", "range": "K3:M7"},   # 18:00–19:00
-    {"time": "20:00", "range": "O3:Q7"},   # 19:00–20:00
-    {"time": "21:00", "range": "B10:D14"}, # 20:00–21:00
-    {"time": "22:00", "range": "F10:H14"}, # 21:00–22:00
-    {"time": "23:00", "range": "K10:M14"}, # 22:00–23:00
-    {"time": "00:00", "range": "O10:Q14"}, # 23:00–00:00
-    {"time": "01:00", "range": "B17:D21"}, # 00:00–01:00
-    {"time": "02:00", "range": "F17:H21"}, # 01:00–02:00
-    {"time": "03:00", "range": "K17:M21"}, # 02:00–03:00
-    {"time": "04:00", "range": "O17:Q21"}, # 03:00–04:00
-    {"time": "05:00", "range": "B24:D28"}, # 04:00–05:00
-    {"time": "06:00", "range": "F24:H28"}, # 05:00–06:00
-    {"time": "07:00", "range": "K24:M28"}, # 06:00–07:00
-    {"time": "10:00", "range": "B38:D42"}, # 09:00–10:00
-    {"time": "11:00", "range": "F38:H42"}, # 10:00–11:00
-    {"time": "12:00", "range": "K38:M42"}, # 11:00–12:00
-    {"time": "13:00", "range": "B46:D50"}, # 12:00–13:00
-    {"time": "14:00", "range": "F46:H50"}, # 13:00–14:00
-    {"time": "15:00", "range": "K46:M50"}, # 14:00–15:00
-    {"time": "16:00", "range": "O46:Q50"}, # 15:00–16:00
+    {"time": "17:00", "range": "B3:D7"},
+    {"time": "18:00", "range": "F3:H7"},
+    {"time": "19:00", "range": "K3:M7"},
+    {"time": "20:00", "range": "O3:Q7"},
+    {"time": "21:00", "range": "B10:D14"},
+    {"time": "22:00", "range": "F10:H14"},
+    {"time": "23:00", "range": "K10:M14"},
+    {"time": "00:00", "range": "O10:Q14"},
+    {"time": "01:00", "range": "B17:D21"},
+    {"time": "02:00", "range": "F17:H21"},
+    {"time": "03:00", "range": "K17:M21"},
+    {"time": "04:00", "range": "O17:Q21"},
+    {"time": "05:00", "range": "B24:D28"},
+    {"time": "06:00", "range": "F24:H28"},
+    {"time": "07:00", "range": "K24:M28"},
+    {"time": "10:00", "range": "B38:D42"},
+    {"time": "11:00", "range": "F38:H42"},
+    {"time": "12:00", "range": "K38:M42"},
+    {"time": "13:00", "range": "B46:D50"},
+    {"time": "14:00", "range": "F46:H50"},
+    {"time": "15:00", "range": "K46:M50"},
+    {"time": "16:00", "range": "O46:Q50"},
 ]
 
 # Отправка диапазона
@@ -62,8 +63,3 @@ for task in tasks:
 
 print("Бот запущен...")
 scheduler.start()
-
-
-
-
-
