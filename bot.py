@@ -42,7 +42,7 @@ def send_report(cell_range):
 
 # Задачи
 tasks = [
-    {"time": "13:00", "range": "С5:D9"},
+    {"time": "13:00", "range": "C5:D9"},
     {"time": "14:00", "range": "G5:H9"},
     {"time": "15:00", "range": "K5:L9"},
     {"time": "16:00", "range": "O5:P9"},
@@ -106,3 +106,4 @@ if __name__ == "__main__":
 
     logging.info("✅ Бот запущен.")
     loop.run_forever()
+
